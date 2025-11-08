@@ -2,7 +2,14 @@ package com.example.ea_beadando;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.*;
+import org.w3c.dom.*;
+import javax.xml.parsers.DocumentBuilderFactory;
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
+import soapclient.MNBArfolyamServiceSoap;
+import soapclient.MNBArfolyamServiceSoapImpl;
 
 @Controller
 public class MyController {
@@ -11,13 +18,60 @@ public class MyController {
 
     }
 
+    @GetMapping("/")
+    public String semmi(Model model) {
+        return "redirect:/fooldal";
+    }
+
     @GetMapping("/fooldal")
-    public String testController(Model model) {
+    public String fooldal(Model model) {
         return "fooldal";
     }
 
     @GetMapping("/soap")
-    public String soap(Model model) {
+    public String showSoapPage(Model model) {
+        model.addAttribute("param", new QueryForm());
+        return "soap";
+    }
+
+    @PostMapping("/soap")
+    public String handleSoapRequest(@ModelAttribute("param") QueryForm param, Model model) {
+        try {
+            MNBArfolyamServiceSoapImpl impl = new MNBArfolyamServiceSoapImpl();
+            MNBArfolyamServiceSoap service = impl.getCustomBindingMNBArfolyamServiceSoap();
+            String xml = service.getExchangeRates(param.getStartDate(), param.getEndDate(), param.getCurrency());
+
+            List<String> labels = new ArrayList<>();
+            List<BigDecimal> values = new ArrayList<>();
+
+            Document doc = DocumentBuilderFactory.newInstance().newDocumentBuilder()
+                    .parse(new java.io.ByteArrayInputStream(xml.getBytes()));
+            doc.getDocumentElement().normalize();
+
+            NodeList dayNodes = doc.getElementsByTagName("Day");
+            for (int i = 0; i < dayNodes.getLength(); i++) {
+                Element day = (Element) dayNodes.item(i);
+                String dateStr = day.getAttribute("date");
+                NodeList rateNodes = day.getElementsByTagName("Rate");
+                for (int j = 0; j < rateNodes.getLength(); j++) {
+                    Element rate = (Element) rateNodes.item(j);
+                    if (param.getCurrency().equals(rate.getAttribute("curr"))) {
+                        String raw = rate.getTextContent().trim().replace(" ", "").replace(",", ".");
+                        values.add(new BigDecimal(raw));
+                        labels.add(dateStr);
+                    }
+                }
+            }
+
+            model.addAttribute("currency", param.getCurrency());
+            model.addAttribute("start", param.getStartDate());
+            model.addAttribute("end", param.getEndDate());
+            model.addAttribute("labels", labels);
+            model.addAttribute("values", values);
+            model.addAttribute("count", values.size());
+        } catch (Exception e) {
+            model.addAttribute("error", "Hiba történt: " + e.getMessage());
+        }
         return "soap";
     }
 
@@ -32,7 +86,8 @@ public class MyController {
     }
 
     @GetMapping("/fhistar")
-    public String fhistar(Model model) {
+    public String fhistar(Model model)
+    {
         return "fhistar";
     }
 
@@ -47,7 +102,8 @@ public class MyController {
     }
 
     @GetMapping("/fzar")
-    public String fzar(Model model) {
+    public String fzar(Model model)
+    {
         return "fzar";
     }
 }

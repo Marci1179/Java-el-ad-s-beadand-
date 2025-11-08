@@ -1,10 +1,19 @@
 <!DOCTYPE html>
-<html lang="hu" xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" lang="hu">
 <head>
-    <meta charset="UTF-8">
-    <title>Főoldal</title>
     <link rel="stylesheet" href="https://unpkg.com/@picocss/pico@latest/css/pico.min.css">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="UTF-8">
+    <title>MNB SOAP – Árfolyamok</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 2rem; }
+        form { display: grid; gap: 0.75rem; max-width: 360px; margin-bottom: 2rem; }
+        label { font-weight: bold; }
+        button { padding: 0.5rem 1rem; cursor: pointer; }
+        table { border-collapse: collapse; width: 100%; margin-top: 1rem; }
+        th, td { border-bottom: 1px solid #ddd; padding: 6px 8px; text-align: left; }
+        .error { color: red; font-weight: bold; }
+    </style>
 </head>
 <body>
 <nav>
@@ -17,9 +26,72 @@
     <a href="/fpoz">Forex-Poz menü</a> |
     <a href="/fzar">Forex-Zár menü</a>
 </nav>
-<main class="container">
-    <h1>SOAP menü</h1>
-    <p>SOAP.</p>
-</main>
+<h1>MNB Árfolyam lekérdezés (SOAP)</h1>
+
+<form th:action="@{/soap}" th:object="${param}" method="post">
+    <label>Deviza:
+        <select th:field="*{currency}">
+            <option value="EUR">EUR</option>
+            <option value="USD">USD</option>
+            <option value="GBP">GBP</option>
+            <option value="JPY">JPY</option>
+        </select>
+    </label>
+
+    <label>Kezdő dátum:
+        <input type="date" th:field="*{startDate}" required>
+    </label>
+
+    <label>Befejező dátum:
+        <input type="date" th:field="*{endDate}" required>
+    </label>
+
+    <button type="submit">Lekérés</button>
+</form>
+
+<p th:if="${error}" th:text="${error}" class="error"></p>
+
+<div th:if="${count != null}">
+    <h2 th:text="'Árfolyamok: ' + ${currency} + ' (' + ${start} + ' → ' + ${end} + ')'"></h2>
+
+    <canvas id="chartCanvas" style="max-width:800px; height:400px;"></canvas>
+
+    <table>
+        <thead><tr><th>Dátum</th><th th:text="'HUF/'+${currency}">HUF/XXX</th></tr></thead>
+        <tbody>
+        <tr th:each="i : ${#numbers.sequence(0, labels.size() - 1)}">
+            <td th:text="${labels[i]}"></td>
+            <td th:text="${values[i]}"></td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+<script th:if="${count != null}" th:inline="javascript">
+    /*<![CDATA[*/
+    const labels = /*[[${labels}]]*/ [];
+    const data = /*[[${values}]]*/ [];
+    const ctx = document.getElementById('chartCanvas');
+
+    new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: /*[['HUF/' + ${currency}]]*/ 'HUF/XXX',
+                data: data,
+                fill: false,
+                tension: 0.2
+            }]
+        },
+        options: {
+            scales: {
+                x: { title: { display: true, text: 'Dátum' } },
+                y: { title: { display: true, text: 'HUF' } }
+            }
+        }
+    });
+    /*]]>*/
+</script>
 </body>
 </html>
