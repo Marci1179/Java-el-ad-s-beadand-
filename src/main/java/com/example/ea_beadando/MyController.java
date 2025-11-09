@@ -1,5 +1,6 @@
 package com.example.ea_beadando;
 
+import com.oanda.v20.pricing.ClientPrice;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -12,9 +13,13 @@ import soapclient.MNBArfolyamServiceSoap;
 import soapclient.MNBArfolyamServiceSoapImpl;
 import com.oanda.v20.Context;
 import com.oanda.v20.account.AccountSummary;
+import com.oanda.v20.pricing.PricingGetRequest;
+import com.oanda.v20.pricing.PricingGetResponse;
 
 @Controller
 public class MyController {
+
+    private final Context ctx = new Context(Config.URL, Config.TOKEN);
 
     public MyController() {
 
@@ -93,8 +98,30 @@ public class MyController {
     }
 
     @GetMapping("/faktar")
-    public String faktar(Model model) {
+    public String faktarForm(Model model) {
+        model.addAttribute("param", new MessageActPrice());
+        model.addAttribute("price", null);
         return "faktar";
+    }
+
+    @PostMapping("/faktar")
+    public String faktarSubmit(@ModelAttribute MessageActPrice param, Model model) {
+        String result = "";
+        List<String> instruments = new ArrayList<>();
+        instruments.add(param.getInstrument());
+        try {
+            Context ctx = new Context(Config.URL, Config.TOKEN);
+            PricingGetRequest request = new PricingGetRequest(Config.ACCOUNTID, instruments);
+            PricingGetResponse resp = ctx.pricing.get(request);
+            for (ClientPrice price : resp.getPrices()) {
+                result += price + "<br>";
+            }
+        } catch (Exception e) {
+            result = "Hiba történt: " + e.getMessage();
+        }
+        model.addAttribute("param", param);
+        model.addAttribute("price", result);
+        return "faktar";  // ugyanazt a faktar.html-t tölti vissza
     }
 
     @GetMapping("/fhistar")

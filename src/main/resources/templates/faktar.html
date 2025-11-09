@@ -1,12 +1,12 @@
 <!DOCTYPE html>
-<html lang="hu" xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
+    <link rel="stylesheet" href="https://unpkg.com/@picocss/pico@latest/css/pico.min.css">
     <meta charset="UTF-8">
     <title>Forex-AktÁr menü</title>
-    <link rel="stylesheet" href="https://unpkg.com/@picocss/pico@latest/css/pico.min.css">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
 </head>
 <body>
+
 <nav>
     <a href="/fooldal">Főoldal menü</a> |
     <a href="/soap">SOAP menü</a> |
@@ -17,9 +17,27 @@
     <a href="/fpoz">Forex-Poz menü</a> |
     <a href="/fzar">Forex-Zár menü</a>
 </nav>
-<main class="container">
-    <h1>Forex-AktÁr menü</h1>
-    <p>Forex-AktÁr menü</p>
-</main>
+
+<h1>Forex Aktuális Ár</h1>
+
+<form th:action="@{/faktar}" th:object="${param}" method="post">
+    <label for="instrument">Instrumentum:</label>
+    <select id="instrument" th:field="*{instrument}">
+        <option value="EUR_USD">EUR/USD</option>
+        <option value="USD_JPY">USD/JPY</option>
+        <option value="GBP_USD">GBP/USD</option>
+        <option value="USD_CHF">USD/CHF</option>
+    </select>
+    <button type="submit">Lekérdez</button>
+</form>
+
+<hr>
+
+<div th:if="${price != null}">
+    <h2>Eredmény:</h2>
+    <p><b th:text="'Instrumentum: ' + ${param.instrument}"></b></p>
+    <p th:utext="${price}"></p>
+</div>
+
 </body>
 </html>
