@@ -10,6 +10,8 @@ import java.util.ArrayList;
 import java.util.List;
 import soapclient.MNBArfolyamServiceSoap;
 import soapclient.MNBArfolyamServiceSoapImpl;
+import com.oanda.v20.Context;
+import com.oanda.v20.account.AccountSummary;
 
 @Controller
 public class MyController {
@@ -63,6 +65,9 @@ public class MyController {
                 }
             }
 
+            java.util.Collections.reverse(labels);
+            java.util.Collections.reverse(values);
+
             model.addAttribute("currency", param.getCurrency());
             model.addAttribute("start", param.getStartDate());
             model.addAttribute("end", param.getEndDate());
@@ -77,6 +82,13 @@ public class MyController {
 
     @GetMapping("/facc")
     public String facc(Model model) {
+        try {
+            Context ctx = new Context(Config.URL, Config.TOKEN);
+            AccountSummary acc = ctx.account.summary(Config.ACCOUNTID).getAccount();
+            model.addAttribute("acc", acc);
+        } catch (Exception e) {
+            model.addAttribute("error", "Nem sikerült lekérni a számlaadatokat: " + e.getMessage());
+        }
         return "facc";
     }
 

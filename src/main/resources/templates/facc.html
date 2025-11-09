@@ -1,10 +1,16 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="hu" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <title>Forex-account menü</title>
     <link rel="stylesheet" href="https://unpkg.com/@picocss/pico@latest/css/pico.min.css">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="UTF-8">
+    <title>Forex account menü</title>
+    <style>
+        body { font-family: system-ui, Arial, sans-serif; margin: 2rem; }
+        table { border-collapse: collapse; margin-top: 1rem; }
+        td { padding: .4rem .8rem; border-bottom: 1px solid #ddd; }
+        td:first-child { font-weight: 600; }
+        .error { color: #b00020; margin-top: 1rem; }
+    </style>
 </head>
 <body>
 <nav>
@@ -17,9 +23,21 @@
     <a href="/fpoz">Forex-Poz menü</a> |
     <a href="/fzar">Forex-Zár menü</a>
 </nav>
-<main class="container">
-    <h1>Forex-account menü</h1>
-    <p>Forex-account menü</p>
-</main>
+<h1>OANDA demo számla</h1>
+
+<p th:if="${error}" class="error" th:text="${error}"></p>
+
+<table th:if="${acc}">
+    <tr><td>Account ID</td><td th:text="${acc.id}"></td></tr>
+    <tr><td>Alias</td><td th:text="${acc.alias}"></td></tr>
+    <tr><td>Pénznem</td><td th:text="${acc.currency}"></td></tr>
+    <tr><td>Egyenleg</td><td th:text="${acc.balance}"></td></tr>
+    <tr><td>Nyitott tradek</td><td th:text="${acc.openTradeCount}"></td></tr>
+    <tr><td>Nyitott pozíciók</td><td th:text="${acc.openPositionCount}"></td></tr>
+    <tr><td>Elérhető margin</td><td th:text="${acc.marginAvailable}"></td></tr>
+    <tr><td>Felhasznált margin</td><td th:text="${acc.marginUsed}"></td></tr>
+    <tr><td>Nem realizált P/L</td><td th:text="${acc.unrealizedPL}"></td></tr>
+    <tr><td>NAV</td><td th:text="${acc.NAV}"></td></tr>
+</table>
 </body>
 </html>
