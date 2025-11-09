@@ -1,14 +1,14 @@
 <!DOCTYPE html>
 <html lang="hu" xmlns:th="http://www.thymeleaf.org">
 <head>
+    <link rel="stylesheet" href="https://unpkg.com/@picocss/pico@latest/css/pico.min.css">
     <meta charset="UTF-8">
     <title>Forex-HistÁr menü</title>
-    <link rel="stylesheet" href="https://unpkg.com/@picocss/pico@latest/css/pico.min.css">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
 </head>
 <body>
 <nav>
-    <a href="/fooldal">Főoldal nemü</a> |
+    <a href="/fooldal">Főoldal menü</a> |
     <a href="/soap">SOAP menü</a> |
     <a href="/facc">Forex-account menü</a> |
     <a href="/faktar">Forex-AktÁr menü</a> |
@@ -17,9 +17,51 @@
     <a href="/fpoz">Forex-Poz menü</a> |
     <a href="/fzar">Forex-Zár menü</a>
 </nav>
-<main class="container">
-    <h1>Forex-HistÁr menü</h1>
-    <p>Forex-HistÁr menü</p>
-</main>
+<h1>Forex – HistÁr</h1>
+<p class="note">Válaszd ki az instrumentumot és az idősűrűséget, majd mutatjuk a legutóbbi 10 záróárat.</p>
+
+<div th:if="${error}" class="err" th:text="${error}"></div>
+
+<form th:action="@{/fhistar}" method="post">
+    <label>
+        Instrumentum:
+        <select name="instrument">
+            <option th:each="ins : ${instruments}"
+                    th:value="${ins}"
+                    th:text="${ins}"
+                    th:selected="${ins == selectedInstrument}">EUR_USD</option>
+        </select>
+    </label>
+
+    <label>
+        Granularity:
+        <select name="granularity">
+            <option th:each="g : ${granularities}"
+                    th:value="${g}"
+                    th:text="${g}"
+                    th:selected="${g == selectedGranularity}">D</option>
+        </select>
+    </label>
+
+    <button type="submit">Lekérés</button>
+</form>
+
+<table th:if="${!#lists.isEmpty(rows)}">
+    <thead>
+    <tr>
+        <th>Dátum-idő (UTC)</th>
+        <th>Záróár (mid C)</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="r : ${rows}">
+        <td th:text="${r[0]}">2025-01-01T00:00:00Z</td>
+        <td th:text="${r[1]}">1.00000</td>
+    </tr>
+    </tbody>
+</table>
+
+<p th:if="${#lists.isEmpty(rows)}">Még nincs megjeleníthető adat.</p>
+
 </body>
 </html>

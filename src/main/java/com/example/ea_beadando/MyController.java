@@ -15,6 +15,11 @@ import com.oanda.v20.Context;
 import com.oanda.v20.account.AccountSummary;
 import com.oanda.v20.pricing.PricingGetRequest;
 import com.oanda.v20.pricing.PricingGetResponse;
+import com.oanda.v20.instrument.Candlestick;
+import com.oanda.v20.instrument.InstrumentCandlesRequest;
+import com.oanda.v20.instrument.InstrumentCandlesResponse;
+import com.oanda.v20.primitives.InstrumentName;
+import static com.oanda.v20.instrument.CandlestickGranularity.*;
 
 @Controller
 public class MyController {
@@ -125,8 +130,60 @@ public class MyController {
     }
 
     @GetMapping("/fhistar")
-    public String fhistar(Model model)
-    {
+    public String fhistar(Model model) {
+        // alap értékek a lenyílókhoz
+        model.addAttribute("instruments", List.of("EUR_USD", "USD_CHF", "GBP_USD", "USD_JPY"));
+        model.addAttribute("granularities", List.of("M1", "H1", "D", "W", "M"));
+        // üres eredmény első betöltéskor
+        model.addAttribute("rows", new ArrayList<>());
+        return "fhistar";
+    }
+
+    @PostMapping("/fhistar")
+    public String fhistarPost(
+            @RequestParam String instrument,
+            @RequestParam String granularity,
+            Model model) {
+
+        try {
+            // kérés összeállítása (10 utolsó gyertya)
+            InstrumentCandlesRequest req =
+                    new InstrumentCandlesRequest(new InstrumentName(instrument));
+            switch (granularity) {
+                case "M1": req.setGranularity(M1); break;
+                case "H1": req.setGranularity(H1); break;
+                case "D":  req.setGranularity(D);  break;
+                case "W":  req.setGranularity(W);  break;
+                case "M":  req.setGranularity(M);  break;
+                default:   req.setGranularity(D);  // fallback
+            }
+            req.setCount(10L);
+
+            InstrumentCandlesResponse resp = ctx.instrument.candles(req);
+
+            // egyszerű (idő, close) sorok a nézethez
+            List<String[]> rows = new ArrayList<>();
+            for (Candlestick c : resp.getCandles()) {
+                String time = c.getTime().toString();
+                String close = c.getMid().getC().toString();
+                rows.add(new String[]{ time, close });
+            }
+
+            // model feltöltése
+            model.addAttribute("instruments", List.of("EUR_USD", "USD_CHF", "GBP_USD", "USD_JPY"));
+            model.addAttribute("granularities", List.of("M1", "H1", "D", "W", "M"));
+            model.addAttribute("selectedInstrument", instrument);
+            model.addAttribute("selectedGranularity", granularity);
+            model.addAttribute("rows", rows);
+
+        } catch (Exception e) {
+            // hiba esetén üzenet + üres lista
+            model.addAttribute("error", "Hiba a historikus adatok lekérésénél: " + e.getMessage());
+            model.addAttribute("rows", new ArrayList<>());
+            model.addAttribute("instruments", List.of("EUR_USD", "USD_CHF", "GBP_USD", "USD_JPY"));
+            model.addAttribute("granularities", List.of("M1", "H1", "D", "W", "M"));
+        }
+
         return "fhistar";
     }
 
