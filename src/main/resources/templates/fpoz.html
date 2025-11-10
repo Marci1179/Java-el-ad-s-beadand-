@@ -1,10 +1,21 @@
 <!DOCTYPE html>
 <html lang="hu" xmlns:th="http://www.thymeleaf.org">
 <head>
+    <link rel="stylesheet" href="https://unpkg.com/@picocss/pico@latest/css/pico.min.css">
     <meta charset="UTF-8">
     <title>Forex-Poz menü</title>
-    <link rel="stylesheet" href="https://unpkg.com/@picocss/pico@latest/css/pico.min.css">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        body { font-family: system-ui, Arial, sans-serif; margin: 24px; }
+        h1 { margin-bottom: 12px; }
+        .meta { color:#666; margin-bottom:12px; }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { padding: 8px 10px; border-bottom: 1px solid #eee; text-align: left; }
+        th { background: #fafafa; }
+        .error { background:#fff1f0; color:#a8071a; border:1px solid #ffa39e; padding:10px; margin-bottom:12px; }
+        .empty { color:#555; margin-top:8px; }
+        .right { text-align: right; white-space: nowrap; }
+        @media (max-width: 760px) { td:nth-child(3) { display:none; } } /* openTime elrejtése mobilon */
+    </style>
 </head>
 <body>
 <nav>
@@ -17,9 +28,41 @@
     <a href="/fpoz">Forex-Poz menü</a> |
     <a href="/fzar">Forex-Zár menü</a>
 </nav>
-<main class="container">
-    <h1>Forex-Poz menü</h1>
-    <p>Forex-Poz menü</p>
-</main>
+<h1>Nyitott pozíciók</h1>
+
+<div th:if="${error}" class="error" th:text="${error}"></div>
+
+<div class="meta">
+    Összesen: <strong th:text="${count}">0</strong> db nyitott pozíció.
+</div>
+
+<div th:if="${trades != null and !#lists.isEmpty(trades)}">
+    <table>
+        <thead>
+        <tr>
+            <th>Trade ID</th>
+            <th>Instrument</th>
+            <th>Nyitás ideje (UTC)</th>
+            <th class="right">Mennyiség</th>
+            <th class="right">Nyitóár</th>
+            <th class="right">Futó P/L</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="t : ${trades}">
+            <td th:text="${t.id}">—</td>
+            <td th:text="${t.instrument}">—</td>
+            <td th:text="${t.openTime}">—</td>
+            <td class="right" th:text="${t.currentUnits}">—</td>
+            <td class="right" th:text="${t.price}">—</td>
+            <td class="right" th:text="${t.unrealizedPL}">—</td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+<div th:if="${trades == null or #lists.isEmpty(trades)}" class="empty">
+    Nincs nyitott pozíció.
+</div>
 </body>
 </html>

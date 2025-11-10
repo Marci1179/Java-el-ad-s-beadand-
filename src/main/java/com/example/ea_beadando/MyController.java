@@ -23,6 +23,9 @@ import com.oanda.v20.instrument.InstrumentCandlesRequest;
 import com.oanda.v20.instrument.InstrumentCandlesResponse;
 import com.oanda.v20.primitives.InstrumentName;
 import static com.oanda.v20.instrument.CandlestickGranularity.*;
+import com.oanda.v20.Context;
+import com.oanda.v20.trade.Trade;
+import java.util.List;
 
 @Controller
 public class MyController {
@@ -222,9 +225,19 @@ public class MyController {
         return "fnyit";
     }
 
-
     @GetMapping("/fpoz")
     public String fpoz(Model model) {
+        try {
+            Context ctx = new Context(Config.URL, Config.TOKEN);
+            List<Trade> trades = ctx.trade.listOpen(Config.ACCOUNTID).getTrades();
+
+            model.addAttribute("trades", trades);
+            model.addAttribute("count", trades != null ? trades.size() : 0);
+        } catch (Exception e) {
+            model.addAttribute("error", "Hiba történt a pozíciók lekérdezésekor: " + e.getMessage());
+            model.addAttribute("trades", null);
+            model.addAttribute("count", 0);
+        }
         return "fpoz";
     }
 
