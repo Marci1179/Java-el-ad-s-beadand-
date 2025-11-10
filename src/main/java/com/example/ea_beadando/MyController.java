@@ -1,5 +1,8 @@
 package com.example.ea_beadando;
 
+import com.oanda.v20.order.MarketOrderRequest;
+import com.oanda.v20.order.OrderCreateRequest;
+import com.oanda.v20.order.OrderCreateResponse;
 import com.oanda.v20.pricing.ClientPrice;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -189,8 +192,36 @@ public class MyController {
 
     @GetMapping("/fnyit")
     public String fnyit(Model model) {
+        model.addAttribute("param", new MessageFnyit());
+        model.addAttribute("result", null);
         return "fnyit";
     }
+
+    @PostMapping("/fnyit")
+    public String fnyitSubmit(@ModelAttribute MessageFnyit messageFnyit, Model model) {
+        String result;
+        try {
+            Context ctx = new Context(Config.URL, Config.TOKEN);
+            InstrumentName instrument = new InstrumentName(messageFnyit.getInstrument());
+            OrderCreateRequest request = new OrderCreateRequest(Config.ACCOUNTID);
+            MarketOrderRequest marketorderrequest = new MarketOrderRequest();
+            marketorderrequest.setInstrument(instrument);
+            marketorderrequest.setUnits(messageFnyit.getUnits());
+            request.setOrder(marketorderrequest);
+            OrderCreateResponse response = ctx.order.create(request);
+
+            result = "Sikeres pozíciónyitás!<br>Instrumentum: "
+                    + messageFnyit.getInstrument()
+                    + "<br>Mennyiség: " + messageFnyit.getUnits()
+                    + "<br>Trade ID: " + response.getOrderFillTransaction().getId();
+        } catch (Exception e) {
+            result = "Hiba történt: " + e.getMessage();
+        }
+        model.addAttribute("param", messageFnyit);
+        model.addAttribute("result", result);
+        return "fnyit";
+    }
+
 
     @GetMapping("/fpoz")
     public String fpoz(Model model) {

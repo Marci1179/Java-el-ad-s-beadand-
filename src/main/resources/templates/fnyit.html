@@ -1,10 +1,9 @@
 <!DOCTYPE html>
-<html lang="hu" xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
+    <link rel="stylesheet" href="https://unpkg.com/@picocss/pico@latest/css/pico.min.css">
     <meta charset="UTF-8">
     <title>Forex-Nyit menü</title>
-    <link rel="stylesheet" href="https://unpkg.com/@picocss/pico@latest/css/pico.min.css">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
 </head>
 <body>
 <nav>
@@ -16,10 +15,31 @@
     <a href="/fnyit">Forex-Nyit menü</a> |
     <a href="/fpoz">Forex-Poz menü</a> |
     <a href="/fzar">Forex-Zár menü</a>
-</nav>
-<main class="container">
-    <h1>Forex-Nyit menü</h1>
-    <p>Forex-Nyit menü</p>
-</main>
+</nav>s
+<h2>Forex Pozíció Nyitás</h2>
+
+<form th:action="@{/fnyit}" th:object="${param}" method="post">
+    <label>Instrumentum:</label>
+    <select th:field="*{instrument}">
+        <option value="EUR_USD">EUR_USD</option>
+        <option value="USD_CHF">USD_CHF</option>
+        <option value="GBP_USD">GBP_USD</option>
+        <option value="USD_JPY">USD_JPY</option>
+    </select><br><br>
+
+    <label>Mennyiség (pozitív: Long, negatív: Short):</label>
+    <input type="number" th:field="*{units}" min="-100" max="100"><br><br>
+
+    <input type="submit" value="Pozíció nyitása">
+</form>
+
+<hr>
+
+<!-- Eredmény megjelenítése -->
+<div th:if="${result}">
+    <h3>Eredmény:</h3>
+    <p th:utext="${result}"></p>
+</div>
+
 </body>
 </html>
