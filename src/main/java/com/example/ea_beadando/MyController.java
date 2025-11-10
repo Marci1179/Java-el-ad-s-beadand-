@@ -26,6 +26,14 @@ import static com.oanda.v20.instrument.CandlestickGranularity.*;
 import com.oanda.v20.Context;
 import com.oanda.v20.trade.Trade;
 import java.util.List;
+import com.oanda.v20.Context;
+import com.oanda.v20.ContextBuilder;
+import com.oanda.v20.trade.TradeCloseRequest;
+import com.oanda.v20.trade.TradeSpecifier;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
 
 @Controller
 public class MyController {
@@ -241,9 +249,23 @@ public class MyController {
         return "fpoz";
     }
 
-    @GetMapping("/fzar")
-    public String fzar(Model model)
-    {
-        return "fzar";
+    @GetMapping({"/fzar"})
+    public String closePositionForm(Model model) {
+        model.addAttribute("param", new MessageClosePosition());
+        return "fzar";           // templates/fzar.html
+    }
+
+    @PostMapping({"/fzar"})
+    public String closePositionSubmit(@ModelAttribute("param") MessageClosePosition form, Model model) {
+        model.addAttribute("param", form);
+        String tradeId = Integer.toString(form.getTradeId());
+        try {
+            ctx.trade.close(new com.oanda.v20.trade.TradeCloseRequest(
+                    Config.ACCOUNTID, new com.oanda.v20.trade.TradeSpecifier(tradeId)));
+            model.addAttribute("msg", "✅ Sikeres zárás. tradeId = " + tradeId);
+        } catch (Exception e) {
+            model.addAttribute("msg", "❌ Hiba a zárásnál: " + e.getMessage());
+        }
+        return "fzar";           // ugyanarra az oldalra térünk vissza
     }
 }

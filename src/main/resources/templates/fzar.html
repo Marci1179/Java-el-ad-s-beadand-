@@ -1,10 +1,9 @@
 <!DOCTYPE html>
 <html lang="hu" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <title>Forex-Zár menü</title>
     <link rel="stylesheet" href="https://unpkg.com/@picocss/pico@latest/css/pico.min.css">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="UTF-8">
+    <title>Forex – Pozíció zárása</title>
 </head>
 <body>
 <nav>
@@ -17,9 +16,21 @@
     <a href="/fpoz">Forex-Poz menü</a> |
     <a href="/fzar">Forex-Zár menü</a>
 </nav>
-<main class="container">
-    <h1>Forex-Zár menü</h1>
-    <p>Forex-Zár menü</p>
-</main>
+<h1>Forex – Pozíció zárása</h1>
+<p>Írd be a zárni kívánt <strong>tradeId</strong> értékét, majd kattints a "Zárás" gombra.</p>
+
+<form th:action="@{/fzar}" th:object="${param}" method="post">
+    <label for="tradeId">tradeId:</label>
+    <input type="number" id="tradeId" th:field="*{tradeId}" required min="1" step="1">
+    <button type="submit">Zárás</button>
+</form>
+
+<div th:if="${msg}" style="margin-top:1rem" th:text="${msg}">
+    <p th:text="${msg}"></p>
+</div>
+
+<p style="margin-top:20px;">
+    <a th:href="@{/fpoz}">Nyitott pozíciók megtekintése</a>
+</p>
 </body>
 </html>
