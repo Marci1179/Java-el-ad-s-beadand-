@@ -76,6 +76,13 @@
             font-size: 0.8rem;
         }
 
+        .menu-card img {
+            width: 100%;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            margin-bottom: 0.5rem;
+            border: 3px solid #fff;
+        }
+
         footer {
             margin-top: 3rem;
             text-align: center;
@@ -129,12 +136,13 @@
 
             <div class="menu-grid">
                 <article class="menu-card">
-                    <h3>Főoldal</h3>
+                    <h3>Főoldal menü</h3>
                     <p>
                         A <strong>Főoldal</strong> menü áttekintést ad az egész Forex demonstrációs
                         webalkalmazásról, bemutatja a menüpontokat és a felhasznált technológiákat.
                         Innen kiindulva érhető el az összes funkció.
                     </p>
+                    <img src="/img/fooldal.jpg" alt="Főoldal menü képe">
                     <small>Áttekintés, navigáció, technológiák rövid bemutatása</small>
                     <p><a href="/fooldal" role="button" class="secondary">Vissza a főoldalra</a></p>
                 </article>
@@ -145,70 +153,77 @@
                         tetszőleges időintervallumra. Az eredményeket táblázatban és
                         <strong>Chart.js</strong> grafikonon jelenítjük meg.
                     </p>
+                    <img src="/img/soap.jpg" alt="SOAP menü képe">
                     <small>Technológiák: JAX-WS, SOAP, Chart.js</small>
                     <p><a href="/soap" role="button">SOAP oldal megnyitása</a></p>
                 </article>
 
                 <article class="menu-card">
-                    <h3>Forex-account</h3>
+                    <h3>Forex-account menü</h3>
                     <p>
                         Az <strong>OANDA</strong> számlaadatokat jelenítjük meg: egyenleg, realizált és
                         nem realizált eredmény, valamint további számlainformációk.
                     </p>
+                    <img src="/img/facc.jpg" alt="Forex-account kép">
                     <small>Technológiák: OANDA v20 Java API, REST</small>
                     <p><a href="/facc" role="button" class="secondary">Account megtekintése</a></p>
                 </article>
 
                 <article class="menu-card">
-                    <h3>Forex-AktÁr</h3>
+                    <h3>Forex-AktÁr menü</h3>
                     <p>
                         Lenyíló listából kiválasztható egy instrumentum (pl. <strong>EUR_USD</strong>),
                         majd az alkalmazás lekérdezi és kiírja az aktuális árfolyamot.
                     </p>
+                    <img src="/img/faktar.jpg" alt="Forex-AktÁr kép">
                     <small>Technológiák: OANDA Pricing API, űrlapkezelés</small>
                     <p><a href="/faktar" role="button">Aktuális árak</a></p>
                 </article>
 
                 <article class="menu-card">
-                    <h3>Forex-HistÁr</h3>
+                    <h3>Forex-HistÁr menü</h3>
                     <p>
                         Választható devizapár és idősűrűség (granularity), majd az alkalmazás
                         lekéri az utolsó 10 historikus gyertyát, és táblázatban jeleníti meg.
                     </p>
+                    <img src="/img/fhistar.jpg" alt="Forex-HistÁr kép">
                     <small>Technológiák: OANDA InstrumentCandles, historikus adatok</small>
                     <p><a href="/fhistar" role="button" class="secondary">Historikus árfolyamok</a></p>
                 </article>
 
                 <article class="menu-card">
-                    <h3>Forex-Nyit</h3>
+                    <h3>Forex-Nyit menü</h3>
                     <p>
                         Az űrlapon kiválasztható az instrumentum és a mennyiség.
                         Pozitív mennyiség esetén <strong>Long</strong>, negatív esetén <strong>Short</strong>
                         pozíciót nyitunk piaci áron.
                     </p>
+                    <img src="/img/fnyit.jpg" alt="Forex-Nyit kép">
                     <small>Technológiák: MarketOrder, OANDA trade API</small>
                     <p><a href="/fnyit" role="button">Pozíció nyitása</a></p>
                 </article>
 
                 <article class="menu-card">
-                    <h3>Forex-Poz</h3>
+                    <h3>Forex-Poz menü</h3>
                     <p>
                         A <strong>Forex-Poz</strong> menüben a nyitott pozíciókat jelenítjük meg.
                         A táblázatban jól áttekinthetően látható a trade azonosító, instrumentum,
                         mennyiség és az aktuális eredmény.
                     </p>
+                    <img src="/img/fpoz.jpg" alt="Forex-Poz kép">
                     <small>Technológiák: trade.listOpen(), OANDA Java API</small>
                     <p><a href="/fpoz" role="button" class="secondary">Nyitott pozíciók</a></p>
                 </article>
 
                 <!-- Szétválasztva: Forex-Zár külön kártya -->
                 <article class="menu-card">
-                    <h3>Forex-Zár</h3>
+                    <h3>Forex-Zár menü</h3>
                     <p>
                         A <strong>Forex-Zár</strong> menüben numerikus mezőben adhatjuk meg a
                         lezárni kívánt <code>tradeId</code>-t, és a rendszer piaci áron lezárja
                         az adott pozíciót.
                     </p>
+                    <img src="/img/fzar.jpg" alt="Forex-Zár kép">
                     <small>Technológiák: trade.close(), OANDA Java API, űrlapkezelés</small>
                     <p><a href="/fzar" role="button">Pozíció zárása</a></p>
                 </article>
