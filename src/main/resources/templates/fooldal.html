@@ -1,12 +1,91 @@
 <!DOCTYPE html>
-<html lang="hu" xmlns:th="http://www.thymeleaf.org">
+<html lang="hu">
 <head>
     <meta charset="UTF-8">
-    <title>Forex-account menü</title>
-    <link rel="stylesheet" href="https://unpkg.com/@picocss/pico@latest/css/pico.min.css">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title th:text="${pageTitle}">Forex webalkalmazás – Főoldal</title>
+
+    <!-- Pico.css – reszponzív, classless téma -->
+    <link rel="stylesheet"
+          href="https://unpkg.com/@picocss/pico@2/css/pico.min.css">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <style>
+        header.hero {
+            padding: 4rem 0 3rem 0;
+            text-align: center;
+        }
+
+        header.hero h1 {
+            font-size: 2.4rem;
+            margin-bottom: 0.5rem;
+        }
+
+        header.hero p.lead {
+            font-size: 1.1rem;
+            max-width: 720px;
+            margin: 0.5rem auto 0 auto;
+        }
+
+        .tagline {
+            font-size: 0.95rem;
+            opacity: 0.8;
+        }
+
+        .grid-2 {
+            display: grid;
+            gap: 1.5rem;
+        }
+
+        @media (min-width: 768px) {
+            .grid-2 {
+                grid-template-columns: 2fr 1fr;
+            }
+        }
+
+        .pill {
+            display: inline-block;
+            padding: 0.25rem 0.8rem;
+            border-radius: 999px;
+            font-size: 0.8rem;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.06);
+        }
+
+        .menu-grid {
+            display: grid;
+            gap: 1rem;
+        }
+
+        @media (min-width: 768px) {
+            .menu-grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+        }
+
+        .menu-card h3 {
+            margin-bottom: 0.25rem;
+        }
+
+        .menu-card p {
+            margin-bottom: 0.4rem;
+        }
+
+        .menu-card small {
+            opacity: 0.8;
+            font-size: 0.8rem;
+        }
+
+        footer {
+            margin-top: 3rem;
+            text-align: center;
+            font-size: 0.8rem;
+            opacity: 0.7;
+        }
+    </style>
 </head>
 <body>
+
 <nav>
     <a href="/fooldal">Főoldal menü</a> |
     <a href="/soap">SOAP menü</a> |
@@ -17,9 +96,165 @@
     <a href="/fpoz">Forex-Poz menü</a> |
     <a href="/fzar">Forex-Zár menü</a>
 </nav>
+
 <main class="container">
-    <h1>Főoldal menü</h1>
-    <p>Főoldal menü</p>
+
+    <!-- HERO szekció -->
+    <header class="hero">
+        <span class="pill">Java előadás beadandó • Spring Boot &amp; Forex</span>
+        <h1>Forex kereskedési demonstrációs webalkalmazás</h1>
+        <p class="lead">
+            A projektünk célja egy oktatási célú, <strong>devizakereskedési</strong> webalkalmazás készítése,
+            amely <strong>Spring Boot</strong>, <strong>Thymeleaf</strong>, az
+            <strong>OANDA REST API</strong> és az <strong>MNB SOAP webszolgáltatás</strong> segítségével
+            mutatja be a valós idejű és historikus devizaárfolyamok kezelését.
+        </p>
+        <p class="tagline">
+            Az oldal megjelenítéséhez a <strong>Pico.css</strong> reszponzív, classless CSS keretrendszert
+            használtuk, amely minimális HTML kóddal is modern, mobilbarát felületet biztosít.
+        </p>
+    </header>
+
+    <section class="grid-2">
+
+        <!-- Bal oldal: menük bemutatása -->
+        <article>
+            <h2>Mit tud az alkalmazás?</h2>
+            <p>
+                Az alkalmazást több, egymásra épülő menüpont alkotja. Ezek együtt demonstrálják,
+                hogyan tudjuk Java és Spring Boot segítségével
+                <strong>külső pénzügyi szolgáltatásokhoz</strong> kapcsolódva
+                a devizakereskedés alapvető folyamatait megvalósítani.
+            </p>
+
+            <div class="menu-grid">
+                <article class="menu-card">
+                    <h3>Főoldal</h3>
+                    <p>
+                        A <strong>Főoldal</strong> menü áttekintést ad az egész Forex demonstrációs
+                        webalkalmazásról, bemutatja a menüpontokat és a felhasznált technológiákat.
+                        Innen kiindulva érhető el az összes funkció.
+                    </p>
+                    <small>Áttekintés, navigáció, technológiák rövid bemutatása</small>
+                    <p><a href="/fooldal" role="button" class="secondary">Vissza a főoldalra</a></p>
+                </article>
+                <article class="menu-card">
+                    <h3>SOAP menü</h3>
+                    <p>
+                        Az <strong>MNB</strong> SOAP webszolgáltatásából kérdezzük le a devizaárfolyamokat
+                        tetszőleges időintervallumra. Az eredményeket táblázatban és
+                        <strong>Chart.js</strong> grafikonon jelenítjük meg.
+                    </p>
+                    <small>Technológiák: JAX-WS, SOAP, Chart.js</small>
+                    <p><a href="/soap" role="button">SOAP oldal megnyitása</a></p>
+                </article>
+
+                <article class="menu-card">
+                    <h3>Forex-account</h3>
+                    <p>
+                        Az <strong>OANDA</strong> számlaadatokat jelenítjük meg: egyenleg, realizált és
+                        nem realizált eredmény, valamint további számlainformációk.
+                    </p>
+                    <small>Technológiák: OANDA v20 Java API, REST</small>
+                    <p><a href="/facc" role="button" class="secondary">Account megtekintése</a></p>
+                </article>
+
+                <article class="menu-card">
+                    <h3>Forex-AktÁr</h3>
+                    <p>
+                        Lenyíló listából kiválasztható egy instrumentum (pl. <strong>EUR_USD</strong>),
+                        majd az alkalmazás lekérdezi és kiírja az aktuális árfolyamot.
+                    </p>
+                    <small>Technológiák: OANDA Pricing API, űrlapkezelés</small>
+                    <p><a href="/faktar" role="button">Aktuális árak</a></p>
+                </article>
+
+                <article class="menu-card">
+                    <h3>Forex-HistÁr</h3>
+                    <p>
+                        Választható devizapár és idősűrűség (granularity), majd az alkalmazás
+                        lekéri az utolsó 10 historikus gyertyát, és táblázatban jeleníti meg.
+                    </p>
+                    <small>Technológiák: OANDA InstrumentCandles, historikus adatok</small>
+                    <p><a href="/fhistar" role="button" class="secondary">Historikus árfolyamok</a></p>
+                </article>
+
+                <article class="menu-card">
+                    <h3>Forex-Nyit</h3>
+                    <p>
+                        Az űrlapon kiválasztható az instrumentum és a mennyiség.
+                        Pozitív mennyiség esetén <strong>Long</strong>, negatív esetén <strong>Short</strong>
+                        pozíciót nyitunk piaci áron.
+                    </p>
+                    <small>Technológiák: MarketOrder, OANDA trade API</small>
+                    <p><a href="/fnyit" role="button">Pozíció nyitása</a></p>
+                </article>
+
+                <article class="menu-card">
+                    <h3>Forex-Poz</h3>
+                    <p>
+                        A <strong>Forex-Poz</strong> menüben a nyitott pozíciókat jelenítjük meg.
+                        A táblázatban jól áttekinthetően látható a trade azonosító, instrumentum,
+                        mennyiség és az aktuális eredmény.
+                    </p>
+                    <small>Technológiák: trade.listOpen(), OANDA Java API</small>
+                    <p><a href="/fpoz" role="button" class="secondary">Nyitott pozíciók</a></p>
+                </article>
+
+                <!-- Szétválasztva: Forex-Zár külön kártya -->
+                <article class="menu-card">
+                    <h3>Forex-Zár</h3>
+                    <p>
+                        A <strong>Forex-Zár</strong> menüben numerikus mezőben adhatjuk meg a
+                        lezárni kívánt <code>tradeId</code>-t, és a rendszer piaci áron lezárja
+                        az adott pozíciót.
+                    </p>
+                    <small>Technológiák: trade.close(), OANDA Java API, űrlapkezelés</small>
+                    <p><a href="/fzar" role="button">Pozíció zárása</a></p>
+                </article>
+
+            </div>
+        </article>
+
+        <!-- Jobb oldal: technológiai összefoglaló -->
+        <article>
+            <h2>Felhasznált technológiák</h2>
+            <ul>
+                <li><strong>Java &amp; Spring Boot</strong> – REST alapú webalkalmazás készítése</li>
+                <li><strong>Thymeleaf</strong> – szerveroldali template motor a nézetekhez</li>
+                <li><strong>OANDA v20 Java API</strong> – valós idejű Forex adat és trade kezelés</li>
+                <li><strong>MNB SOAP webszolgáltatás</strong> – hivatalos devizaárfolyam lekérdezése</li>
+                <li><strong>Chart.js</strong> – grafikonok rajzolása a SOAP menüben</li>
+                <li><strong>Pico.css</strong> – modern, reszponzív, classless CSS téma</li>
+            </ul>
+
+            <h3>Az alkalmazás célja</h3>
+            <p>
+                A beadandóval bemutatjuk, hogyan tudunk egyetlen webalkalmazásban
+                <strong>több külső szolgáltatást</strong> (SOAP + REST) integrálni, és ezekre
+                építve egy egyszerű, de jól áttekinthető devizakereskedési
+                demonstrációs rendszert kialakítani.
+            </p>
+
+            <h3>Használati javaslat</h3>
+            <ol>
+                <li>Nyissuk meg a <strong>SOAP</strong> menüt, és vizsgáljuk meg az MNB árfolyamait.</li>
+                <li>A <strong>Forex-account</strong> menüben ellenőrizzük a számlaadatokat.</li>
+                <li>A <strong>Forex-AktÁr</strong> és <strong>Forex-HistÁr</strong> menükkel
+                    nézzük meg az aktuális és historikus OANDA árakat.</li>
+                <li>A <strong>Forex-Nyit</strong> menüben hozzunk létre egy teszt pozíciót.</li>
+                <li>A <strong>Forex-Poz</strong> menüben ellenőrizzük a nyitott pozíciókat,
+                    majd a <strong>Forex-Zár</strong> segítségével zárjuk le őket.</li>
+            </ol>
+        </article>
+
+    </section>
+
+    <footer>
+        Java előadás beadandó – Forex demonstrációs alkalmazás<br>
+        Készítette: Kovács Márton Bence - N15T6L és Nagy Márk - VD5LHD
+    </footer>
 </main>
+
 </body>
 </html>
